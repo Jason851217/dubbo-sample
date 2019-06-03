@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="version-provider"/>
+	
+	<bean id="someService" class="com.learningcenter.zookeeper.provider.SomeServiceImpl"/>
+
+	<bean id="otherService" class="com.learningcenter.zookeeper.provider.OtherServiceImpl"/>
+
+	<!--声明zk服务中心 单机-->
+	<dubbo:registry address="zookeeper://localhost:2181" />
+	<!--<dubbo:registry protocol="zookeeper" address="localhost:2181"/>-->
+
+	<!--声明zk服务中心 集群-->
+	<!--<dubbo:registry address="zookeeper://192.168.1.100:2181?backup=192.168.1.101:2181,192.168.1.102:2181,192.168.1.103:2181"/>-->
+
+	<!--
+	暴露服务，会将服务注册到上面的zk服务中心,
+
+	多版本控制
+		Dubbo 的多版本控制指的是，服务名称(接口名)相同的情况下提供不同的服务(实现 类不同)，然而消费者是通过服务名称(接口名)进行服务查找并进行消费的。
+		提供者所提 供的服务名称相同，如何让消费者通过名称进行服务查找呢?为服务添加一个版本号，使用 “服务名称 + 版本号”的方式来唯一确定一个服务。
+		多版本控制主要的应用场景是:当一个接口的实现类需要升级时，可以使用版本号进行 过渡(根据开闭原则，不能直接修改原实现类，只能添加新的实现类)。
+		需要注意的是，版 本号不同的服务间是不能相互引用的，因为新版本存在的目的是替换老版本。
+		在生产环境中 若存在多个提供者需要升级，一般不会一次性全部进行升级，而是会在低压力时间段先升级 一部分，然后在下次再进行部分升级，直到全部升级完成。
+		那么，这期间就需要使用版本号 进行过渡。
+
+	-->
+	<dubbo:service interface="com.learningcenter.api.SomeService" ref="someService" version="1.0.0" />
+
+	<dubbo:service interface="com.learningcenter.api.SomeService" ref="otherService" version="2.0.0"/>
+</beans>

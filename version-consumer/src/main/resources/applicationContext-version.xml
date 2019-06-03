@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+
+	<dubbo:application name="version-consumer"></dubbo:application>
+
+	<!--
+	声明zk服务中心 单机
+
+	dubbo:registry可以指定多个.表示服务往多个注册中心注册
+	-->
+	<dubbo:registry address="zookeeper://localhost:2181" />
+	<!--<dubbo:registry protocol="zookeeper" address="localhost:2181"/>-->
+
+	<!--声明zk服务中心 集群-->
+	<!--<dubbo:registry address="zookeeper://192.168.1.100:2181?backup=192.168.1.101:2181,192.168.1.102:2181,192.168.1.103:2181"/>-->
+
+	<!--
+	服务引用
+	通过interface+version来确定具体使用服务的哪种实现
+	-->
+
+	<dubbo:reference id="someService" interface="com.learningcenter.api.SomeService" version="2.0.0"/>
+
+
+</beans>
