@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!--在spring容器中注册服务，其就是真正的服务提供者-->
+	<bean id="someService" class="com.learningcenter.provider.SomeServiceImpl"></bean>
+
+	<!--应用名称，该名称将在dubbo监控平台使用-->
+	<dubbo:application name="some-provider"></dubbo:application>
+
+	<!--
+	暴露服务
+	registry="N/A"：表示不使用注册中心，而采用直连的方式(点对点提供服务)，直连方式使用的是dubbo协议
+	interface：需要对外暴露的接口
+	ref:真正的服务实现者的Bean id
+	-->
+	<dubbo:service interface="com.learningcenter.api.SomeService"  ref="someService" registry="N/A"></dubbo:service>
+</beans>
