@@ -63,7 +63,7 @@
 	-->
 
 		<dubbo:reference id="someService" interface="com.learningcenter.api.SomeService">
-			<dubbo:method name="sayHello" cache="lru" timeout=""></dubbo:method>
+			<dubbo:method name="sayHello" cache="lru"></dubbo:method>
 		</dubbo:reference>
 
 
