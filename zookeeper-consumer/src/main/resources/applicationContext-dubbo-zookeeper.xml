@@ -7,11 +7,64 @@
 
 	<dubbo:application name="zookeeper-consumer"></dubbo:application>
 
-	<!--声明zk服务中心-->
+	<!--
+	声明zk服务中心 单机
+
+	dubbo:registry可以指定多个.表示服务往多个注册中心注册
+	-->
 	<dubbo:registry address="zookeeper://localhost:2181" />
 	<!--<dubbo:registry protocol="zookeeper" address="localhost:2181"/>-->
 
-	<!--服务引用,url指定服务在哪里-->
-	<dubbo:reference id="someService" interface="com.learningcenter.api.SomeService" />
+	<!--声明zk服务中心 集群-->
+	<!--<dubbo:registry address="zookeeper://192.168.1.100:2181?backup=192.168.1.101:2181,192.168.1.102:2181,192.168.1.103:2181"/>-->
+
+	<!--
+	服务引用
+
+	Dubbo的声明式缓存：
+		为了进一步提高消费者对用户的响应速度，减轻提供者的压力，Dubbo提供了基于结果的声明式缓存。
+		该缓存是基于消费者端的，所以使用很简单，只需要修改消费者配置文件，与提供者无关。注意：缓存的是返回结果
+
+		1.基于服务级别的声明式缓存：仅需在<dubbo:reference/>中添加cache="true"属性即可。
+
+			<dubbo:reference id="someService" interface="com.learningcenter.api.SomeService" cache="true"/>
+
+		2.基于方法级别的声明式缓存：
+
+			<dubbo:reference id="someService" interface="com.learningcenter.api.SomeService">
+				<dubbo:method name="sayHello" cache="lru"></dubbo:method>
+			</dubbo:reference>
+
+		dubbo提供了三种结果缓存机制：
+
+			- lru：服务级别缓存的默认机制。该机制默认可以缓存1000个结果，若超出1000，将采用最近最少使用原则来删除缓存，以保证最热的数据被缓存
+
+			- threadlocal：当前线程缓存，当多个线程要对当前线程进行某一操作时首先需要查询当前线程的某个信息，通过线程缓存，则可以有效减少查询
+
+			- jcache：可以桥接各种缓存实现，即第三方缓存产品
+
+		结果缓存的应用场景：
+
+			dubbo的结果缓存可以应用在查询结果不变的场景下，即不能使用在如下场景：消费者A调用的业务方法后从DB中查询到了一个结果a。此后，消费者B
+			对DB中的该结果相关数据进行了修改，已使该查询结果变为了b，但由于使用了结果缓存，消费者A中调用业务方法后的查询结果将长时间为a，直到该
+			结果由于缓存空间满而被清除。否则，永远无法得到更新过的结果b
+
+		<dubbo:reference/>中的registry属性：表示从指定的服务注册中心引用服务。它的值为服务注册中心的id
+		<dubbo:reference/>中的check属性：表示启动时，检查依赖的提供者
+		<dubbo:reference/>中的async属性:表示服务中的方法都是异步调用
+
+		<dubbo:method/>中的return属性：表示方法结果被返回
+		<dubbo:method/>中的onreturn属性：在返回时触发
+		<dubbo:method/>中的oninvoke属性：在调用时触发
+		<dubbo:method/>中的onthrow属性：在异常时触发
+		<dubbo:method/>中的async属性:表示指定的方法是异步调用
+		<dubbo:method/>中的timeout属性:表示指定的方法调用超时时长，默认为0，不超时
+
+	-->
+
+		<dubbo:reference id="someService" interface="com.learningcenter.api.SomeService">
+			<dubbo:method name="sayHello" cache="lru" timeout=""></dubbo:method>
+		</dubbo:reference>
+
 
 </beans>

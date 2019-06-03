@@ -8,9 +8,12 @@
 	
 	<bean id="someService" class="com.learningcenter.zookeeper.provider.SomeServiceImpl"/>
 
-	<!--声明zk服务中心-->
+	<!--声明zk服务中心 单机-->
 	<dubbo:registry address="zookeeper://localhost:2181" />
 	<!--<dubbo:registry protocol="zookeeper" address="localhost:2181"/>-->
+
+	<!--声明zk服务中心 集群-->
+	<!--<dubbo:registry address="zookeeper://192.168.1.100:2181?backup=192.168.1.101:2181,192.168.1.102:2181,192.168.1.103:2181"/>-->
 
 	<!--暴露服务，会将服务注册到上面的zk服务中心-->
 	<dubbo:service interface="com.learningcenter.api.SomeService" ref="someService" />

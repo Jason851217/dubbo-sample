@@ -29,7 +29,10 @@ public class SomeController {
 
 	@GetMapping("/home")
 	public String home(Model model){
-		String result = someService.sayHello("Zookeeper Dubbo");
+		String result = someService.sayHello("Dubbo");
+		System.out.println(result);
+		String result1 = someService.sayHello("Zookeeper");
+		System.out.println(result1);
 		model.addAttribute("msg",result);
 		return "msg";
 	}
