@@ -10,7 +10,7 @@
 	<!--
 	声明zk服务中心 单机
 
-	dubbo:registry可以指定多个.表示服务往多个注册中心注册
+	<dubbo:registry/>可以指定多个服务注册中心
 	-->
 	<dubbo:registry address="zookeeper://localhost:2181" />
 	<!--<dubbo:registry protocol="zookeeper" address="localhost:2181"/>-->
@@ -49,6 +49,7 @@
 			对DB中的该结果相关数据进行了修改，已使该查询结果变为了b，但由于使用了结果缓存，消费者A中调用业务方法后的查询结果将长时间为a，直到该
 			结果由于缓存空间满而被清除。否则，永远无法得到更新过的结果b
 
+		提供者端的<dubbo:service/>中register属性：可以将服务注册到多个中心，多个注册中间用","隔开
 		<dubbo:reference/>中的registry属性：表示从指定的服务注册中心引用服务。它的值为服务注册中心的id
 		<dubbo:reference/>中的check属性：表示启动时，检查依赖的提供者
 		<dubbo:reference/>中的async属性:表示服务中的方法都是异步调用
