@@ -4,17 +4,22 @@
 	   xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-	<dubbo:application name="zookeeper-dubbo-provider"/>
-	
 	<bean id="someService" class="com.learningcenter.zookeeper.provider.SomeServiceImpl"/>
 
-	<!--声明zk服务中心 单机-->
+	<!--提供方应用信息，用于计算依赖关系-->
+	<dubbo:application name="zookeeper-dubbo-provider"/>
+	
+
+	<!--声明zk服务中心的地址 单机-->
 	<dubbo:registry address="zookeeper://localhost:2181" />
+
+	<!--用dubbo协议在20880端口暴露服务-->
+	<dubbo:protocol name="dubbo" port="20880"/>
 	<!--<dubbo:registry protocol="zookeeper" address="localhost:2181"/>-->
 
 	<!--声明zk服务中心 集群-->
 	<!--<dubbo:registry address="zookeeper://192.168.1.100:2181?backup=192.168.1.101:2181,192.168.1.102:2181,192.168.1.103:2181"/>-->
 
-	<!--暴露服务，会将服务注册到上面的zk服务中心-->
+	<!--声明需要暴露的服务接口，会将服务注册到上面的zk服务中心-->
 	<dubbo:service interface="com.learningcenter.api.SomeService" ref="someService" />
 </beans>
